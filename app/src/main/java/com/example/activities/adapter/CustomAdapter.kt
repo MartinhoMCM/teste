@@ -1,4 +1,4 @@
-package com.example.activities
+package com.example.activities.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,8 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.activities.R
 import com.example.activities.model.activities
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.dialog_deposit.view.*
+import kotlinx.android.synthetic.main.dialog_deposit.view.dialog_date_id
+import kotlinx.android.synthetic.main.dialog_deposit.view.dialog_reference_id
+import kotlinx.android.synthetic.main.dialog_recharge.view.*
 import java.text.DecimalFormat
 
 class CustomAdapter(private  val mActivitiesList :List<activities> ):
@@ -23,7 +28,7 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
         viewGroup =parent;
         val v =LayoutInflater.from(parent.context).inflate(R.layout.item_activity, parent, false)
 
-        return  ViewHolder(v)
+        return ViewHolder(v)
     }
 
     override fun getItemCount(): Int {
@@ -45,8 +50,17 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
 
         holder.itemView.setOnClickListener(View.OnClickListener {
 
-            if(activity.transaction_type.equals("PAYMENT"))
-            OpenDialog(activity, date)
+            if(activity.transaction_type.equals("PAYMENT")) {
+                OpenDialogPayment(activity, date)
+            }
+            else if (activity.transaction_type.equals("DEPOSIT")) {
+               OpenDialogDeposit(activity, date)
+            }
+            else
+            {
+                OpenDialogRecharge(activity, date)
+            }
+
         })
 
        if(amount!=null) {
@@ -135,7 +149,6 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
         return  amount
     }
 
-
     fun receiveCreatedAd(str :String):String
     {
         var length =str.indexOf('.')
@@ -166,18 +179,14 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
     }
 
 
-    @SuppressLint("InflateParams")
-    fun OpenDialog(activities: activities, date:String)
+    fun OpenDialogPayment(activities: activities, date:String)
     {
         var amount = numberFormat((activities.amount)!!.toFloat())
         var content =""
 
-        if(activities.transaction_type.equals("PAYMENT"))
-        {
             var fee :Float =(activities.fee)!!.toFloat()
             content ="Recebeste de " +activities.from.firstname +" " +activities.from.lastname
             //var date =activities.created_at
-
             val dialog =BottomSheetDialog(viewGroup!!.context)
             val view =LayoutInflater.from(viewGroup!!.context).inflate(R.layout.dialog_payment, null)
             var dialog_from =view.findViewById<TextView>(R.id.dialog_from)
@@ -189,7 +198,7 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
             var dialog_ok =view.findViewById<TextView>(R.id.dialog_ok)
 
             dialog_from.text =content
-            dialog_amount.text=amount
+            dialog_amount.text="Kz "+amount
 
            if(fee>0)
            {
@@ -215,24 +224,68 @@ class CustomAdapter(private  val mActivitiesList :List<activities> ):
 
             dialog.setContentView(view)
             dialog.show()
-        }
-        else if(activities.transaction_type.equals("RECHARGE"))
-        {
+
+
+    }
+
+    fun OpenDialogDeposit(activities: activities, date:String)
+    {
+        var amount = numberFormat((activities.amount)!!.toFloat())
+        var content =""
+
             val dialog =BottomSheetDialog(viewGroup!!.context)
-            val view =LayoutInflater.from(viewGroup!!.context).inflate(R.layout.dialog_payment, null)
+            val view =LayoutInflater.from(viewGroup!!.context).inflate(R.layout.dialog_deposit, null)
+
+             view.dialog_reference_id.setText(activities.id)
+             view.dialog_date_id.setText(date)
+             view.dialog_amount_deposited_id.setText(amount)
+             view.dialog_bank_name_id.setText(activities.company_bankAccount!!.bank!!.name)
+             view.dialog_bank_account_id.setText(activities.company_bankAccount.number)
+             view.dialog_holder_id.setText(activities.company_bankAccount.holder)
+             view.dialog_transaction_type_id.setText("DEPÓSITO")
+
+          view.dialog_deposit_ok.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
             dialog.setContentView(view)
             dialog.show()
 
-        }
-        else
-            if(activities.transaction_type.equals("DEPOSIT"))
-            {
-                val dialog =BottomSheetDialog(viewGroup!!.context)
-                val view =LayoutInflater.from(viewGroup!!.context).inflate(R.layout.dialog_payment, null)
-                dialog.setContentView(view)
-                dialog.show()
-            }
     }
+
+    fun OpenDialogRecharge(activities: activities, date:String)
+    {
+
+        var amount="null"
+        //This condition is to verify if amount is null or not.
+        //Note I use this condition to verify  other proprieties because some json object are null from Kamba API
+        if(activities.amount!=null) {
+           amount = numberFormat((activities.amount)!!.toFloat())
+        }
+
+        var content =""
+
+        val dialog =BottomSheetDialog(viewGroup!!.context)
+        val view =LayoutInflater.from(viewGroup!!.context).inflate(R.layout.dialog_recharge, null)
+
+        view.dialog_reference_id.setText(activities.id)
+        view.dialog_date_id.setText(date)
+        view.dialog_operator_id.setText(activities.mobile_operator_name)
+        view.dialog_utts_id.setText(activities.amount_of_utts)
+        view.dialog_recharge_code_id.setText(activities.recharge_code)
+        view.dialog_recharge_price_id.setText(activities.recharge_price)
+        view.dialog_recharge_validaty_id.setText(activities.validity_days)
+        view.dialog_recharge_amount_paid_id.setText("Kz "+amount)
+
+        view.dialog_ok.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
+        dialog.setContentView(view)
+        dialog.show()
+
+    }
+
 
 
 

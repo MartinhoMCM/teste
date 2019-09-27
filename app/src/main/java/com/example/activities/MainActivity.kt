@@ -1,6 +1,5 @@
 package com.example.activities
 
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.activities.adapter.CustomAdapter
 import com.example.activities.model.activities
 import com.example.activities.service.KambaClient
 import com.example.activities.service.ServiceBuilder
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val rv_activity =findViewById(R.id.rv_activities) as RecyclerView
         rv_activity.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val adapter =CustomAdapter(activityList)
+        val adapter = CustomAdapter(activityList)
         rv_activity.adapter =adapter
 
         progressbar_id.visibility = View.VISIBLE
@@ -90,7 +90,8 @@ class MainActivity : AppCompatActivity() {
                        }
                   }
 
-                  rv_activities.adapter =CustomAdapter(activities_op)
+                  rv_activities.adapter =
+                      CustomAdapter(activities_op)
                   rv_activities.visibility=View.VISIBLE
                   progressbar_id.visibility = View.INVISIBLE
 

@@ -121,7 +121,7 @@
         android:layout_toEndOf="@id/dialog_reference_ask"/>
 
     <Button
-        android:id="@+id/dialog_button_id"
+        android:id="@+id/dialog_ok"
         style="@style/button_patter"
         android:text="OK"
         android:layout_alignParentBottom="true"/>

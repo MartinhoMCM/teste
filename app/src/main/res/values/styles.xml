@@ -49,9 +49,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_alignParentStart">true</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
     </style>
 
     <style name="dialog_text_style_2">
@@ -60,8 +60,8 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_marginStart">32dp</item>
         <item name="android:layout_marginEnd">32dp</item>
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
     </style>
 
     <style name="button_patter">
